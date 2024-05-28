@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using API.Data;
+using Microsoft.AspNetCore.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,7 +13,15 @@ builder.Services.AddDbContext<DataContext>(opt =>
 });
 
 builder.Services.AddControllers(); //nsures that your MVC controllers are registered with the dependency injection container.
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithOrigins("https://localhost:4200");
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +35,8 @@ app.UseHttpsRedirection();
 app.UseRouting(); // enables endpoint routing, which is necessary for the application to route incoming HTTP requests to the appropriate controllers.
 
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
 
 app.MapControllers(); // ensures that your controllers' routes are mapped correctly so that the endpoints are recognized.
 

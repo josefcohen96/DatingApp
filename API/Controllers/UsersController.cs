@@ -24,6 +24,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
         Console.WriteLine("GetUsers method was called");
+        
         var users = await _context.Users.ToListAsync();
         Console.WriteLine($"Number of users retrieved: {users.Count}");
 
